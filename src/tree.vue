@@ -116,10 +116,10 @@
                     this[textFieldName] = item[textFieldName] || ''
                     this[valueFieldName] = item[valueFieldName] || item[textFieldName]
 
-                    let lastsix= item.icon(item.icon.length -6)
+                    let lastsix= item.icon.substring(item.icon.length, 5)
                     if(lastsix == " fa-2x")
                     {
-
+                        //left blank on purpose
                     }
                     else{
                     this.icon = item.icon ?  (item.icon+" fa-2x") :'far fa-folder fa-2x'
