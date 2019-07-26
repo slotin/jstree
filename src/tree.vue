@@ -23,7 +23,7 @@
                        :klass="index === data.length-1?'tree-last':''">
                 <template slot-scope="_">
                     <slot :vm="_.vm" :model="_.model">
-                        <i :class="_.vm.themeIconClasses" role="presentation" v-if="!_.model.loading"></i>
+                        <i :class="_.vm.themeIconClasses" role="presentation"  v-if="!_.model.loading"></i>
                         <span v-html="_.model[textFieldName]"></span>
                     </slot>
                 </template>
@@ -115,7 +115,17 @@
                     this.id = item.id || ITEM_ID++
                     this[textFieldName] = item[textFieldName] || ''
                     this[valueFieldName] = item[valueFieldName] || item[textFieldName]
-                    this.icon = item.icon || ''
+
+                    let lastsix= item.icon(item.icon.length -6)
+                    if(lastsix == " fa-2x")
+                    {
+
+                    }
+                    else{
+                    this.icon = item.icon ?  (item.icon+" fa-2x") :'far fa-folder fa-2x'
+                    item.icon = item.icon ?  (item.icon+" fa-2x") :'far fa-folder fa-2x'
+                    }
+                  //  this.icon =  (item.icon+" fa-2x") || ''
                     this.opened = item.opened || collapse
                     this.selected = item.selected || false
                     this.disabled = item.disabled || false
