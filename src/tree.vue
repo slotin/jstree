@@ -116,7 +116,7 @@
                     this[textFieldName] = item[textFieldName] || ''
                     this[valueFieldName] = item[valueFieldName] || item[textFieldName]
 
-                    let lastsix= item.icon.substring(item.icon.length, 5)
+                    let lastsix= item.icon.substring(-6)
                     if(lastsix == " fa-2x")
                     {
                         //left blank on purpose
