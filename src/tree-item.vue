@@ -34,6 +34,7 @@
                        :draggable="draggable"
                        :drag-over-background-color="dragOverBackgroundColor"
                        :on-item-click="onItemClick"
+                       :on-item-dbl-click="onItemDblClick"
                        :on-item-toggle="onItemToggle"
                        :on-item-drag-start="onItemDragStart"
                        :on-item-drag-end="onItemDragEnd"
@@ -65,6 +66,9 @@
           parentItem: {type: Array},
           draggable: {type: Boolean, default: false},
           dragOverBackgroundColor: {type: String},
+          onItemDblClick:{
+              type: Function, default: () => false
+          },
           onItemClick: {
               type: Function, default: () => false
           },
@@ -197,6 +201,11 @@
               this.model.selected = !this.model.selected
               this.onItemClick(this, this.model, e)
           },
+          handleItemDblClick (e) {
+              if (this.model.disabled) return
+              this.model.selected = !this.model.selected
+              this.onItemDblClick(this, this.model, e)
+          },
           handleItemMouseOver () {
               this.isHover = true
           },
@@ -212,6 +221,7 @@
           const self = this
           const events = {
               'click': this.handleItemClick,
+              'dblclick': this.handleItemDblClick,
               'mouseover': this.handleItemMouseOver,
               'mouseout': this.handleItemMouseOut
           }

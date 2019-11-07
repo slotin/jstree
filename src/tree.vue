@@ -15,6 +15,7 @@
                        :parent-item="data"
                        :draggable="draggable"
                        :drag-over-background-color="dragOverBackgroundColor"
+                       :on-item-dbl-click="onItemDblClick"
                        :on-item-click="onItemClick"
                        :on-item-toggle="onItemToggle"
                        :on-item-drag-start="onItemDragStart"
@@ -190,6 +191,9 @@
                         }
                     }
                 }
+            },
+            onItemDblClick(oriNode, oriItem, e) {
+                this.$emit('item-dbl-click', oriNode, oriItem, e)
             },
             onItemClick(oriNode, oriItem, e) {
                 if (this.multiple) {
