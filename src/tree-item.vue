@@ -7,14 +7,15 @@
         @dragover.stop.prevent="isDragEnter = true"
         @dragenter.stop.prevent="isDragEnter = true"
         @dragleave.stop.prevent="isDragEnter = false"
-        @drop.stop.prevent="handleItemDrop($event, _self, _self.model)">
+        @drop.stop.prevent="handleItemDrop($event, _self, _self.model)"
+        v-on:dblclick="handledblClick"
+    >
         <div role="presentation" :class="wholeRowClasses" v-on="events" v-if="isWholeRow">&nbsp;</div>
 <!--        <i v-if="!isLeaf" class="tree-icon tree-ocl" role="presentation" @click="handleItemToggle"></i>-->
         <div :class="anchorClasses" v-on="events">
-         <i class="tree-icon tree-checkbox" role="presentation" v-if="showCheckbox && !model.loading"></i>
-
+         <i class="tree-icon tree-checkbox" role="presentation" v-if="showCheckbox && !model.loading"  ></i>
             <slot :vm="this" :model="model">
-                <i :class="themeIconClasses" role="presentation"  v-if="model.loading"></i>
+                <i :class="themeIconClasses" role="presentation" name="iconplace" v-if="model.loading"></i>
                 <span v-html="model[textFieldName]"></span>
             </slot>
         </div>
@@ -27,6 +28,7 @@
                        :children-field-name="childrenFieldName"
                        :item-events="itemEvents"
                        :whole-row="wholeRow"
+                       :isHWTree="isHWTree"
                        :show-checkbox="showCheckbox"
                        :allow-transition="allowTransition"
                        :height= "height"
@@ -34,7 +36,6 @@
                        :draggable="draggable"
                        :drag-over-background-color="dragOverBackgroundColor"
                        :on-item-click="onItemClick"
-                       :on-item-dbl-click="onItemDblClick"
                        :on-item-toggle="onItemToggle"
                        :on-item-drag-start="onItemDragStart"
                        :on-item-drag-end="onItemDragEnd"
@@ -42,7 +43,7 @@
                        :klass="index === model[childrenFieldName].length-1?'tree-last':''">
                 <template slot-scope="_">
                     <slot :vm="_.vm" :model="_.model">
-                   <i :class="_.vm.themeIconClasses" role="presentation" v-if=" model.loading"></i>
+                   <i :class="_.vm.themeIconClasses" role="presentation" v-if="!model.loading"></i>
                         <span v-html="_.model[textFieldName]"></span>
                     </slot>
                 </template>
@@ -54,6 +55,7 @@
   export default {
       name: 'TreeItem',
       props: {
+          isHWTree: {type: Boolean, default: false}, // needs to be chanined back towards the tree module at soem point
           data: {type: Object, required: true},
           textFieldName: {type: String},
           valueFieldName: {type: String},
@@ -66,9 +68,6 @@
           parentItem: {type: Array},
           draggable: {type: Boolean, default: false},
           dragOverBackgroundColor: {type: String},
-          onItemDblClick:{
-              type: Function, default: () => false
-          },
           onItemClick: {
               type: Function, default: () => false
           },
@@ -92,7 +91,8 @@
               isDragEnter: false,
               model: this.data,
               maxHeight: 0,
-              events: {}
+              backgroundImage: "",
+              events: {},
           }
       },
       watch: {
@@ -144,13 +144,15 @@
                   {'tree-wholerow-hovered': this.isHover}
               ]
           },
-          themeIconClasses () {
-              return [
+          themeIconClasses ()
+          {
+              return[
                   {'tree-icon': true},
                   {'tree-themeicon': true},
                   {[this.model.icon]: !!this.model.icon},
                   {'tree-themeicon-custom': !!this.model.icon}
               ]
+
           },
           isWholeRow () {
               if (this.wholeRow) {
@@ -201,10 +203,9 @@
               this.model.selected = !this.model.selected
               this.onItemClick(this, this.model, e)
           },
-          handleItemDblClick (e) {
-              if (this.model.disabled) return
-              this.model.selected = !this.model.selected
-              this.onItemDblClick(this, this.model, e)
+          handledblClick(e)
+          {
+              console.log("doubleclick on a tree item")
           },
           handleItemMouseOver () {
               this.isHover = true
@@ -218,10 +219,10 @@
           }
       },
       created () {
+          this.backgroundImage="url('data:image/png;base64,"+this.model.icon+"')"
           const self = this
           const events = {
               'click': this.handleItemClick,
-              'dblclick': this.handleItemDblClick,
               'mouseover': this.handleItemMouseOver,
               'mouseout': this.handleItemMouseOut
           }
