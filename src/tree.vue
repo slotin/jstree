@@ -4,6 +4,7 @@
             <tree-item v-for="(child, index) in data"
                        :key="index"
                        :data="child"
+                       :isHWTree="isHWTree"
                        :text-field-name="textFieldName"
                        :value-field-name="valueFieldName"
                        :children-field-name="childrenFieldName"
@@ -15,16 +16,15 @@
                        :parent-item="data"
                        :draggable="draggable"
                        :drag-over-background-color="dragOverBackgroundColor"
-                       :on-item-dbl-click="onItemDblClick"
                        :on-item-click="onItemClick"
                        :on-item-toggle="onItemToggle"
                        :on-item-drag-start="onItemDragStart"
                        :on-item-drag-end="onItemDragEnd"
                        :on-item-drop="onItemDrop"
-                       :klass="index === data.length-1?'tree-last':''">
+                :klass="index === data.length-1?'tree-last':''">
                 <template slot-scope="_">
                     <slot :vm="_.vm" :model="_.model">
-                        <i :class="_.vm.themeIconClasses" role="presentation"  v-if="!_.model.loading"></i>
+                        <i :class="_.vm.themeIconClasses" role="presentation" v-if="!_.model.loading"></i>
                         <span v-html="_.model[textFieldName]"></span>
                     </slot>
                 </template>
@@ -59,6 +59,10 @@
                 type: Object, default: function () {
                     return {}
                 }
+            },
+            isHWTree: {
+                type: Boolean,
+                default: false,
             },
             async: {type: Function},
             loadingText: {type: String, default: 'Loading...'},
@@ -117,8 +121,11 @@
                     this[textFieldName] = item[textFieldName] || ''
                     this[valueFieldName] = item[valueFieldName] || item[textFieldName]
 
-                    let lastsix= item.icon.substring(-6)
-                    if(lastsix == " fa-2x")
+                  //  this.backgroundImage="url('data:image/png;base64,"+item.icon+"')"
+
+                    let lastsix= item.icon.substr(-6)
+                    //console.log(lastsix);
+                    if(lastsix == " fa-2x" )
                     {
                         //left blank on purpose
                     }
@@ -126,7 +133,7 @@
                     this.icon = item.icon ?  (item.icon+" fa-2x") :'far fa-folder fa-2x'
                     item.icon = item.icon ?  (item.icon+" fa-2x") :'far fa-folder fa-2x'
                     }
-                  //  this.icon =  (item.icon+" fa-2x") || ''
+
                     this.opened = item.opened || collapse
                     this.selected = item.selected || false
                     this.disabled = item.disabled || false
@@ -191,9 +198,6 @@
                         }
                     }
                 }
-            },
-            onItemDblClick(oriNode, oriItem, e) {
-                this.$emit('item-dbl-click', oriNode, oriItem, e)
             },
             onItemClick(oriNode, oriItem, e) {
                 if (this.multiple) {
