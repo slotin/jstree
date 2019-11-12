@@ -8,7 +8,7 @@
         @dragenter.stop.prevent="isDragEnter = true"
         @dragleave.stop.prevent="isDragEnter = false"
         @drop.stop.prevent="handleItemDrop($event, _self, _self.model)"
-        v-on:dblclick="handledblClick"
+       
     >
         <div role="presentation" :class="wholeRowClasses" v-on="events" v-if="isWholeRow">&nbsp;</div>
 <!--        <i v-if="!isLeaf" class="tree-icon tree-ocl" role="presentation" @click="handleItemToggle"></i>-->
@@ -34,6 +34,7 @@
                        :height= "height"
                        :parent-item="model[childrenFieldName]"
                        :draggable="draggable"
+					   :on-item-dbl-click="onItemDblClick"
                        :drag-over-background-color="dragOverBackgroundColor"
                        :on-item-click="onItemClick"
                        :on-item-toggle="onItemToggle"
@@ -66,6 +67,9 @@
           allowTransition: {type: Boolean, default: true},
           height: {type: Number, default: 24},
           parentItem: {type: Array},
+		  onItemDblClick:{
+              type: Function, default: () => false
+          },
           draggable: {type: Boolean, default: false},
           dragOverBackgroundColor: {type: String},
           onItemClick: {
@@ -198,6 +202,11 @@
                   }
               }
           },
+		  handleItemDblClick (e) {
+              if (this.model.disabled) return
+              this.model.selected = !this.model.selected
+              this.onItemDblClick(this, this.model, e)
+          },
           handleItemClick (e) {
               if (this.model.disabled) return
               this.model.selected = !this.model.selected
@@ -223,6 +232,7 @@
           const self = this
           const events = {
               'click': this.handleItemClick,
+			  'dblclick': this.handleItemDblClick,
               'mouseover': this.handleItemMouseOver,
               'mouseout': this.handleItemMouseOut
           }

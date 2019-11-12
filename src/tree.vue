@@ -15,6 +15,7 @@
                        :height="sizeHeight"
                        :parent-item="data"
                        :draggable="draggable"
+					   :on-item-dbl-click="onItemDblClick"
                        :drag-over-background-color="dragOverBackgroundColor"
                        :on-item-click="onItemClick"
                        :on-item-toggle="onItemToggle"
@@ -190,6 +191,9 @@
                     }
                 }
             },
+			onItemDblClick(oriNode, oriItem, e) {
+                this.$emit('item-dbl-click', oriNode, oriItem, e)
+			},
             handleRecursionNodeChildren(node, func) {
                 if (func(node) !== false) {
                     if (node[this.childrenFieldName] && node[this.childrenFieldName].length > 0) {
