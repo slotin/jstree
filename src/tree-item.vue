@@ -8,7 +8,7 @@
         @dragenter.stop.prevent="isDragEnter = true"
         @dragleave.stop.prevent="isDragEnter = false"
         @drop.stop.prevent="handleItemDrop($event, _self, _self.model)"
-       
+
     >
         <div role="presentation" :class="wholeRowClasses" v-on="events" v-if="isWholeRow">&nbsp;</div>
 <!--        <i v-if="!isLeaf" class="tree-icon tree-ocl" role="presentation" @click="handleItemToggle"></i>-->
@@ -203,11 +203,19 @@
               }
           },
 		  handleItemDblClick (e) {
+		  	  // dont handle icon clicks
+              if(e.target.classList.contains("tree-icon")){
+                  return;
+              }
               if (this.model.disabled) return
               this.model.selected = !this.model.selected
               this.onItemDblClick(this, this.model, e)
           },
           handleItemClick (e) {
+		      // dont handle icon clicks
+              if(e.target.classList.contains("tree-icon")){
+                  return;
+              }
               if (this.model.disabled) return
               this.model.selected = !this.model.selected
               this.onItemClick(this, this.model, e)

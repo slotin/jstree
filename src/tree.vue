@@ -25,7 +25,7 @@
                 :klass="index === data.length-1?'tree-last':''">
                 <template slot-scope="_">
                     <slot :vm="_.vm" :model="_.model">
-                        <i :class="_.vm.themeIconClasses" role="presentation" v-if="!_.model.loading"></i>
+                        <i :class="_.vm.themeIconClasses" @click="checkBoxClick(_.vm,_.model)" role="presentation" v-if="!_.model.loading"></i>
                         <span v-html="_.model[textFieldName]"></span>
                     </slot>
                 </template>
@@ -224,6 +224,10 @@
                     if (node.model.disabled) return
                     node.model.selected = oriNode.model.selected
                 })
+            },
+            checkBoxClick(oriNode, oriItem){
+                oriItem.opened = !oriItem.opened
+                this.onItemToggle(oriNode, oriItem)
             },
             onItemToggle(oriNode, oriItem, e) {
                 if (oriNode.model.opened) {
