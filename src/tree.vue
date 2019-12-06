@@ -70,7 +70,7 @@
             draggable: {type: Boolean, default: false},
             dragOverBackgroundColor: {type: String, default: "#C9FDC9"},
             klass: String,
-            HasCheckbox: false
+            hasCheckbox: false
         },
         data() {
             return {
@@ -227,7 +227,7 @@
                 })
             },
             checkBoxClick(oriNode, oriItem){
-                if(this.HasCheckbox)
+                if(this.hasCheckbox)
                 {
                     console.log("do the checkbox thing")
                     this.$emit('item-click', oriNode, oriItem)
