@@ -69,7 +69,8 @@
             loadingText: {type: String, default: 'Loading...'},
             draggable: {type: Boolean, default: false},
             dragOverBackgroundColor: {type: String, default: "#C9FDC9"},
-            klass: String
+            klass: String,
+            HasCheckbox: false
         },
         data() {
             return {
@@ -226,8 +227,16 @@
                 })
             },
             checkBoxClick(oriNode, oriItem){
-                oriItem.opened = !oriItem.opened
-                this.onItemToggle(oriNode, oriItem)
+                if(this.HasCheckbox)
+                {
+                    console.log("do the checkbox thing")
+                    this.$emit('item-click', oriNode, oriItem)
+                }
+                else
+                {
+                    oriItem.opened = !oriItem.opened
+                    this.onItemToggle(oriNode, oriItem)
+                }
             },
             onItemToggle(oriNode, oriItem, e) {
                 if (oriNode.model.opened) {
