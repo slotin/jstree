@@ -212,7 +212,9 @@
                 } else {
                     this.handleSingleSelectItems(oriNode, oriItem)
                 }
-                this.$emit('item-click', oriNode, oriItem, e)
+                if(!this.hasCheckbox){
+                    this.$emit('item-click', oriNode, oriItem, e)
+                }
             },
             handleSingleSelectItems(oriNode, oriItem) {
                 this.handleRecursionNodeChilds(this, node => {
@@ -242,6 +244,7 @@
                 if (oriNode.model.opened) {
                     this.handleAsyncLoad(oriNode.model[this.childrenFieldName], oriNode, oriItem)
                 }
+
                 this.$emit('item-toggle', oriNode, oriItem, e)
             },
             handleAsyncLoad(oriParent, oriNode, oriItem) {
