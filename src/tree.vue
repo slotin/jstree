@@ -4,7 +4,6 @@
             <tree-item v-for="(child, index) in data"
                        :key="index"
                        :data="child"
-                       :isHWTree="isHWTree"
                        :text-field-name="textFieldName"
                        :value-field-name="valueFieldName"
                        :children-field-name="childrenFieldName"
@@ -60,10 +59,6 @@
                 type: Object, default: function () {
                     return {}
                 }
-            },
-            isHWTree: {
-                type: Boolean,
-                default: false,
             },
             async: {type: Function},
             loadingText: {type: String, default: 'Loading...'},

@@ -28,7 +28,6 @@
                        :children-field-name="childrenFieldName"
                        :item-events="itemEvents"
                        :whole-row="wholeRow"
-                       :isHWTree="isHWTree"
                        :show-checkbox="showCheckbox"
                        :allow-transition="allowTransition"
                        :height= "height"
@@ -56,7 +55,6 @@
   export default {
       name: 'TreeItem',
       props: {
-          isHWTree: {type: Boolean, default: false}, // needs to be chanined back towards the tree module at soem point
           data: {type: Object, required: true},
           textFieldName: {type: String},
           valueFieldName: {type: String},
