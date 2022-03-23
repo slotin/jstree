@@ -44,7 +44,8 @@
                 <template slot-scope="_">
                     <slot :vm="_.vm" :model="_.model">
                    <i :class="_.vm.themeIconClasses" role="presentation" v-if="!model.loading"></i>
-                        <span v-html="_.model[textFieldName]"></span>
+                        <span v-html="_.model[textFieldName]"> </span>
+                        <i class="fas fa-ellipsis-v"></i>
                     </slot>
                 </template>
             </tree-item>
