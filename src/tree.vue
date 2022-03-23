@@ -26,10 +26,25 @@
                     <slot :vm="_.vm" :model="_.model">
                         <i :class="_.vm.themeIconClasses" @click="checkBoxClick(_.vm,_.model)" role="presentation" v-if="!_.model.loading"></i>
                         <span v-html="_.model[textFieldName]"></span>
+                      <span @click="showContextMenu" class="dots"><i class="mx-2 fas fa-ellipsis-v"></i></span>
                     </slot>
                 </template>
             </tree-item>
         </ul>
+      <div class="dropdown-menu dropdown-menu-sm" id="contextMenu" ref="contextMenu">
+        <a class="dropdown-item disabled" href="#" @click="runCommand('Start')">Start</a>
+        <a class="dropdown-item" href="#" @click="runCommand('Restart')">Restart</a>
+        <a class="dropdown-item" href="#" @click="runCommand('Stop')">Stop</a>
+        <hr />
+        <a class="dropdown-item" href="#">View Device Status...</a>
+        <a class="dropdown-item" href="#">View Recent Events...</a>
+        <a class="dropdown-item disabled" href="#">Show in Maps</a>
+        <a class="dropdown-item" href="#">Edit...</a>
+        <a class="dropdown-item" href="#">Disable</a>
+        <a class="dropdown-item" href="#">Delete</a>
+        <a class="dropdown-item" href="#">Export as XML...</a>
+      </div>
+      <notifications group="top-right" position="top right" :speed="3000" />
     </div>
 </template>
 <script>
@@ -210,6 +225,9 @@
                 if(!this.hasCheckbox){
                     this.$emit('item-click', oriNode, oriItem, e)
                 }
+                // if(this.$refs.contextMenu.classList.contains('show') && this.$refs.contextMenu.classList.contains('show')) {
+                //   setTimeout(this.hideContextMenu, 500);
+                // }
             },
             handleSingleSelectItems(oriNode, oriItem) {
                 this.handleRecursionNodeChilds(this, node => {
@@ -308,6 +326,27 @@
                     })
                     this.$emit("item-drop", oriNode, oriItem, draggedItem.item, e)
                 }
+            },
+            showContextMenu(e) {
+              let top = e.pageY;
+              let left = e.pageX;
+              this.$refs.contextMenu.style.top = top + "px";
+              this.$refs.contextMenu.style.left = left + "px";
+              this.$refs.contextMenu.classList.add('show');
+            },
+            hideContextMenu() {
+              this.$refs.contextMenu.classList.remove('show');
+            },
+            show ( group, type = '', title ) {
+              this.$notify( {
+                group,
+                title: title,
+                type,
+              } )
+            },
+            runCommand(title) {
+              this.hideContextMenu();
+              this.show('top-right', 'warning', `Processing: ${title}`);
             }
         },
         created() {
@@ -326,4 +365,33 @@
 </script>
 <style lang="less">
     @import "./less/style";
+</style>
+<style>
+#contextMenu {
+  position: fixed;
+}
+.dark-mode .dots {
+  color: #fff;
+}
+.dots {
+  transition: .1s all;
+  opacity: 0;
+  color: #000;
+}
+.dark-mode .tree-hovered .dots,
+.dark-mode .tree-selected .dots {
+  opacity: 1;
+  color: #000;
+}
+.tree-hovered .dots,
+.tree-selected .dots {
+  opacity: 1;
+  color: #fff;
+}
+.dark-mode .tree-wholerow-clicked .dots {
+  color: #000;
+}
+.tree-wholerow-clicked .dots {
+  color: #fff;
+}
 </style>
