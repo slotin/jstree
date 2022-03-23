@@ -32,17 +32,17 @@
             </tree-item>
         </ul>
       <div class="dropdown-menu dropdown-menu-sm" id="contextMenu" ref="contextMenu">
-        <a class="dropdown-item disabled" href="#" @click="runCommand('Start')">Start</a>
-        <a class="dropdown-item" href="#" @click="runCommand('Restart')">Restart</a>
-        <a class="dropdown-item" href="#" @click="runCommand('Stop')">Stop</a>
+        <span class="dropdown-item disabled" @click="runCommand('Start')">Start</span>
+        <span class="dropdown-item" @click="runCommand('Restart')">Restart</span>
+        <span class="dropdown-item" @click="runCommand('Stop')">Stop</span>
         <hr />
-        <a class="dropdown-item" href="#">View Device Status...</a>
-        <a class="dropdown-item" href="#">View Recent Events...</a>
-        <a class="dropdown-item disabled" href="#">Show in Maps</a>
-        <a class="dropdown-item" href="#">Edit...</a>
-        <a class="dropdown-item" href="#">Disable</a>
-        <a class="dropdown-item" href="#">Delete</a>
-        <a class="dropdown-item" href="#">Export as XML...</a>
+        <span class="dropdown-item" @click="hideContextMenu">View Device Status...</span>
+        <span class="dropdown-item" @click="hideContextMenu">View Recent Events...</span>
+        <span class="dropdown-item disabled">Show in Maps</span>
+        <span class="dropdown-item" @click="hideContextMenu">Edit...</span>
+        <span class="dropdown-item" @click="hideContextMenu">Disable</span>
+        <span class="dropdown-item" @click="hideContextMenu">Delete</span>
+        <span class="dropdown-item" @click="hideContextMenu">Export as XML...</span>
       </div>
       <notifications group="top-right" position="top right" :speed="3000" />
     </div>
@@ -137,7 +137,7 @@
 
                     let lastsix= item.icon.substr(-6)
                     //console.log(lastsix);
-                    if(lastsix == " fa-2x" )
+                    if(lastsix === " fa-2x" )
                     {
                         //left blank on purpose
                     }
@@ -225,9 +225,6 @@
                 if(!this.hasCheckbox){
                     this.$emit('item-click', oriNode, oriItem, e)
                 }
-                // if(this.$refs.contextMenu.classList.contains('show') && this.$refs.contextMenu.classList.contains('show')) {
-                //   setTimeout(this.hideContextMenu, 500);
-                // }
             },
             handleSingleSelectItems(oriNode, oriItem) {
                 this.handleRecursionNodeChilds(this, node => {
@@ -328,7 +325,7 @@
                 }
             },
             showContextMenu(e) {
-              let top = e.pageY;
+              let top = e.pageY - window.pageYOffset;
               let left = e.pageX;
               this.$refs.contextMenu.style.top = top + "px";
               this.$refs.contextMenu.style.left = left + "px";
@@ -347,12 +344,21 @@
             runCommand(title) {
               this.hideContextMenu();
               this.show('top-right', 'warning', `Processing: ${title}`);
-            }
+            },
+          handleScroll (event) {
+            let yOffset = window.pageYOffset + this.$refs.contextMenu.style.top;
+            this.$refs.contextMenu.style.top = yOffset + "px";
+            this.hideContextMenu();
+          }
         },
         created() {
+          window.addEventListener('scroll', this.handleScroll);
             this.initializeData(this.data)
         },
-        mounted() {
+        destroyed () {
+          window.removeEventListener('scroll', this.handleScroll);
+        },
+      mounted() {
             if (this.async) {
                 this.$set(this.data, 0, this.initializeLoading())
                 this.handleAsyncLoad(this.data, this)
@@ -386,7 +392,6 @@
 .tree-hovered .dots,
 .tree-selected .dots {
   opacity: 1;
-  color: #fff;
 }
 .dark-mode .tree-wholerow-clicked .dots {
   color: #000;
